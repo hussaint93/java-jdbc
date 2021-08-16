@@ -38,7 +38,7 @@ public class JDBCDemo {
 	private static void sort(Statement statement) throws SQLException {
 		ResultSet resultSet = statement.executeQuery("SELECT * FROM REGIONS ORDER BY REGION_NAME");
 		while (resultSet.next()) {
-			logger.debug(resultSet.getInt(1) + " "+ resultSet.getNString("REGION_NAME"));
+			logger.debug("id ={} name={}",resultSet.getInt(1) , resultSet.getNString("REGION_NAME"));//paramterized logging 
 		}
 	}
 

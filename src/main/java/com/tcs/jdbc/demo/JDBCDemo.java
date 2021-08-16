@@ -8,13 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import  com.tcs.jdbc.demo.JDBCDemo;
 
 public class JDBCDemo {
-	private static Logger logger = LogManager.getLogger(JDBCDemo.class);
+	private static Logger logger = LoggerFactory.getLogger(JDBCDemo.class);
 	public static void main(String[] args) {
 		String DB_URL = "jdbc:mysql://localhost/practice";
 		String DB_USER = "root";
@@ -27,7 +27,7 @@ public class JDBCDemo {
 			retrieve(statement);
 			// delete(statement);
 			List<String> reg = retrieveWithCondittion(statement, "A");
-			logger.debug(reg);
+			logger.debug(reg.toString());
 			sort(statement);
 		} catch (SQLException e) {
 			e.printStackTrace();

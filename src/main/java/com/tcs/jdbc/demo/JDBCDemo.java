@@ -1,4 +1,5 @@
 package com.tcs.jdbc.demo;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -6,32 +7,45 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import  com.tcs.jdbc.demo.JDBCDemo;
+
 public class JDBCDemo {
+	private static Logger logger = LogManager.getLogger(JDBCDemo.class);
 	public static void main(String[] args) {
-		String DB_URL="jdbc:mysql://localhost/practice";
-		String DB_USER="root";
-		String DB_PASSWORD="Nuvelabs123$";
-		
-		try(Connection connection= DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
-				Statement statement = connection.createStatement();){
-			//create(statement);//create operation 
-			update(statement);
+		String DB_URL = "jdbc:mysql://localhost/practice";
+		String DB_USER = "root";
+		String DB_PASSWORD = "Nuvelabs123$";
+
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				Statement statement = connection.createStatement();) {
+			// create(statement);//create operation
+			//update(statement);
 			retrieve(statement);
-			//delete(statement);
-			List<String> reg= retrieveWithCondittion(statement,"A");
-			System.out.println(reg);
+			// delete(statement);
+			List<String> reg = retrieveWithCondittion(statement, "A");
+			logger.debug(reg);
+			sort(statement);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		};
+		}
+		;
+	}
+
+	private static void sort(Statement statement) throws SQLException {
+		ResultSet resultSet = statement.executeQuery("SELECT * FROM REGIONS ORDER BY REGION_NAME");
+		while (resultSet.next()) {
+			logger.debug(resultSet.getInt(1) + " "+ resultSet.getNString("REGION_NAME"));
+		}
 	}
 
 	private static List<String> retrieveWithCondittion(Statement statement, String str) throws SQLException {
-		ResultSet resultSet = statement.executeQuery("SELECT * FROM REGIONS WHERE REGION_NAME LIKE '"+str+"%'");
-	
+		ResultSet resultSet = statement.executeQuery("SELECT * FROM REGIONS WHERE REGION_NAME LIKE '" + str + "%'");
 		List<String> ls = new ArrayList<>();
-		while(resultSet.next()) {
-			System.out.print(resultSet.getInt(1)+" ");
-			System.out.println(resultSet.getNString("REGION_NAME"));
+		while (resultSet.next()) {
 			ls.add(resultSet.getNString("REGION_NAME"));
 		}
 		System.out.println("");
@@ -50,13 +64,13 @@ public class JDBCDemo {
 
 	private static void retrieve(Statement statement) throws SQLException {
 		ResultSet resultSet = statement.executeQuery("SELECT * FROM REGIONS");
-		
-		while(resultSet.next()) {
-			System.out.print(resultSet.getInt(1)+" ");
-			System.out.println(resultSet.getNString("REGION_NAME"));
+
+		while (resultSet.next()) {
+			logger.debug(resultSet.getInt(1) + " "+ resultSet.getNString("REGION_NAME"));
 		}
 		System.out.println("");
 	}
+
 	private static void create(Statement statement) throws SQLException {
 		statement.execute("INSERT INTO REGIONS VALUES(5,'Canada')");
 	}
